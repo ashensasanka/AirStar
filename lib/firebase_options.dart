@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -49,6 +43,15 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBwQdXx4FqrDplUBA61aAbufcNuOLZ67Is',
+    appId: '1:686020907395:web:33cce26cedfa70fcc466b6',
+    messagingSenderId: '686020907395',
+    projectId: 'assignment-4ca6f',
+    authDomain: 'assignment-4ca6f.firebaseapp.com',
+    storageBucket: 'assignment-4ca6f.appspot.com',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDWCdTFRZ24GZDgtRSaOV_rPmfBsEe44Eo',
     appId: '1:686020907395:android:a8ef5320b15b1bdcc466b6',
@@ -64,5 +67,14 @@ class DefaultFirebaseOptions {
     projectId: 'assignment-4ca6f',
     storageBucket: 'assignment-4ca6f.appspot.com',
     iosBundleId: 'com.example.assignmentApp',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBBFFYHFUAQwxsX8GTTjMRoV5EWMCz_TZg',
+    appId: '1:686020907395:ios:2e8a22b93a88d60ac466b6',
+    messagingSenderId: '686020907395',
+    projectId: 'assignment-4ca6f',
+    storageBucket: 'assignment-4ca6f.appspot.com',
+    iosBundleId: 'com.example.assignmentApp.RunnerTests',
   );
 }

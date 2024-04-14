@@ -20,6 +20,7 @@ class _ItemPageState extends State<ItemPage> {
     final String image = args['image'];
     final String title = args['title'];
     final String price = args['price'];
+    final String userName = args['userName'];
     final prices = price.replaceAll(RegExp(r'[^0-9.]'), '');
     double doubleValue = double.parse(prices);
     return Scaffold(
@@ -160,6 +161,7 @@ class _ItemPageState extends State<ItemPage> {
         name:title,
         image:image,
         totalAmount: doubleValue,
+        userName:userName
       ),
     );
   }

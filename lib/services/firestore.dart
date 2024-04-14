@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
 
 class FireStoreService {
@@ -22,7 +22,7 @@ class FireStoreService {
     return notesStream;
   }
 
-  Future<void> updateAdminNote(String docID, String newNote, String newSubtext,) {
+  Future<void> updateAdminNote(String docID, String newNote, String newSubtext) {
     // Update the document with specified docID in 'notes' collection with new note content, subtext, and updated timestamp
     return notes.doc(docID).update({
       'note': newNote,
@@ -63,6 +63,30 @@ class FireStoreService {
     final favoriteNotesStream = cart.where('favorite', isEqualTo: true).snapshots();
     return favoriteNotesStream;
   }
+  Future<void> submitDataToFirestore(String name, String image, double prices, String userName)  async {
+    // Access Firestore instance
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+
+    // Add your Firestore collection name
+    CollectionReference claimDataCollection = firestore.collection('cart${userName}');
+
+    // Add data to Firestore
+    try {
+       claimDataCollection.doc().set({
+         'name': name,
+         'price':prices,
+         'timestamp': Timestamp.now(),
+         'imageUrl':image,
+         'status':'Pending'
+        // Add other fields as needed
+      });
+      print('Data submitted to Firestore successfully!');
+    } catch (e) {
+      print('Error submitting data to Firestore: $e');
+    }
+  }
 
   addCart(String name, String image, double prices) async {
     return cart.add({
@@ -77,7 +101,7 @@ class FireStoreService {
 
     final imagePath = 'newest/item${DateTime.now().millisecondsSinceEpoch}';
     final Reference storageReference = storage.ref().child(imagePath);
-    double price = double.parse(prices);
+      double price = double.parse(prices);
 
     // Specify content type as 'image/jpeg'
     final metadata = SettableMetadata(contentType: filetype);

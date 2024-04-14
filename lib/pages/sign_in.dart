@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:assignment_app/pages/admin_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'HomePage.dart';
 import 'sign_up.dart';
@@ -43,14 +44,20 @@ class _SignInPageState extends State<SignInPage> {
       );
     } else {
       final user = await FirebaseFirestore.instance.collection('users').doc(_emailController.text).get();
+      // var users = FirebaseAuth.instance.currentUser;
 
       final userDetails = user.data();
 
       final hashedPassword = _hashPassword(_passwordController.text);
 
       if(user.exists && userDetails?['password'] == hashedPassword) {
+        // await FirebaseFirestore.instance.collection('cart${users!.uid}').doc().set({
+        //   'user_id': users!.uid,
+        //   'username': userDetails?['username'],
+        //   // Add other user details as needed
+        // });
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => HomePage(userName:userDetails?['email'])),
           (Route<dynamic> route) => false, // Predicate to remove all routes
         );
       } else {

@@ -1,15 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Widgets/AppBarWidget.dart';
+import '../Widgets/CartBottomEmtNavBar.dart';
 import '../Widgets/CartBottomNavBar.dart';
 import '../Widgets/DrawerWidget.dart';
 
 class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic> args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final String userName = args['userName'];
     return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('cart').snapshots(),
+      stream: FirebaseFirestore.instance.collection('cart${userName}').snapshots(),
       builder: (context, snapshot) {
         List<Widget> itemWidgets = [];
         if (!snapshot.hasData){
@@ -48,8 +52,12 @@ class CartPage extends StatelessWidget {
                   Column(
                     children: itemWidgets,
                   ),
+                  itemWidgets.isEmpty?
+                  Center(
+                    child: Text('No Items'),
+                  )
                   // Your bottom content here
-                  Padding(
+                  :Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
                     child: Container(
                       padding: EdgeInsets.all(20.0),
@@ -159,7 +167,7 @@ class CartPage extends StatelessWidget {
             ),
           ),
           drawer: DrawerWidget(),
-          bottomNavigationBar: CartBottomNavBar(),
+          bottomNavigationBar: itemWidgets.isEmpty? CartBottomEmtNavBar():CartBottomNavBar(),
         );
       }
     );

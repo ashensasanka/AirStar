@@ -7,6 +7,9 @@ import '../Widgets/NewestItemWidget.dart';
 import '../Widgets/PopularItemsWidget.dart';
 
 class HomePage extends StatelessWidget {
+  final String? userName;
+
+  const HomePage({Key? key, this.userName}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,7 +111,7 @@ class HomePage extends StatelessWidget {
           ),
 
           // ---------------Newest Item Widget----------------
-          NewestItemWidget(),
+          NewestItemWidget(userName:userName),
         ],
       ),
 
@@ -129,7 +132,7 @@ class HomePage extends StatelessWidget {
         ),
         child: FloatingActionButton(
           onPressed: () {
-            Navigator.pushNamed(context, "/cartPage");
+            Navigator.pushNamed(context, "/cartPage",arguments: {'userName':userName},);
           },
           child: Icon(CupertinoIcons.cart,
             size: 28,

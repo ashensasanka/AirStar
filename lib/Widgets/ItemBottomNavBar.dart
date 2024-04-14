@@ -9,15 +9,36 @@ class ItemBottomNavBar extends StatelessWidget {
   final double totalAmount;
   final String name;
   final String image;
+  final String userName;
 
   ItemBottomNavBar({
     Key? key,
-    required this.totalAmount, required this.name, required this.image,
+    required this.totalAmount, required this.name, required this.image,required this.userName,
   }) : super(key: key);
   final FireStoreService fireStoreService = FireStoreService();
   late Stream<QuerySnapshot> _notesStream;
 
+  // void openNoteBox() {
+  //   fireStoreService.addCart(
+  //       name,
+  //       image,
+  //       totalAmount
+  //   );
+  //   Fluttertoast.showToast(
+  //     msg: "Note added successfully",
+  //     toastLength: Toast.LENGTH_SHORT,
+  //     gravity: ToastGravity.BOTTOM,
+  //     backgroundColor: Colors.green,
+  //     textColor: Colors.white,
+  //   );
+  // }
   void openNoteBox() {
+    fireStoreService.submitDataToFirestore(
+        name,
+        image,
+        totalAmount,
+      userName
+    );
     fireStoreService.addCart(
         name,
         image,
@@ -75,7 +96,7 @@ class ItemBottomNavBar extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: () {
                 openNoteBox();
-                Navigator.pushNamed(context, "/cartPage");
+                Navigator.pushNamed(context, "/cartPage",arguments: {'userName':userName},);
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.red),

@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class NewestItemWidget extends StatelessWidget {
+  final String? userName;
+
+  const NewestItemWidget({Key? key, this.userName}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+
     return StreamBuilder(
       stream: FirebaseFirestore.instance.collection('newest').snapshots(),
       builder: (context, snapshot) {
@@ -21,6 +25,7 @@ class NewestItemWidget extends StatelessWidget {
               item['name'],
               item['subtitle'],
               "\R\S ${item['price']}",
+              userName
             );
             itemWidgets.add(itemWidget);
           }
@@ -37,7 +42,7 @@ class NewestItemWidget extends StatelessWidget {
     );
   }
 
-  Widget buildItem(BuildContext context, String image, String title, String description, String price) {
+  Widget buildItem(BuildContext context, String image, String title, String description, String price, String? userName) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10.0),
       child: Container(
@@ -66,6 +71,7 @@ class NewestItemWidget extends StatelessWidget {
                     'image': image,
                     'title': title,
                     'price': price,
+                    'userName':userName
                   },
                 );
               },

@@ -39,6 +39,18 @@ class FireStoreService {
     });
   }
 
+  Future<void> updateIStatus(String email, String docIDemail ,String newStatus) {
+    // Access Firestore instance
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    // Add your Firestore collection name
+    CollectionReference DataCollection = firestore.collection('cart${email}');
+    // Update the document with specified docID in 'notes' collection with new note content, subtext, and updated timestamp
+    return DataCollection.doc(docIDemail).update({
+      'status': newStatus,
+      'timestamp': Timestamp.now(),
+    });
+  }
+
   // Method to delete a note from Firestore
   Future<void> deleteCart(String docID) {
     // Delete the document with specified docID from 'notes' collection
@@ -63,40 +75,52 @@ class FireStoreService {
     final favoriteNotesStream = cart.where('favorite', isEqualTo: true).snapshots();
     return favoriteNotesStream;
   }
-  Future<void> submitDataToFirestore(String name, String image, double prices, String userName)  async {
+  Future<void> submitDataToFirestore(String name, String image, double prices, String userName) async {
     // Access Firestore instance
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User? user = auth.currentUser;
-
     // Add your Firestore collection name
     CollectionReference claimDataCollection = firestore.collection('cart${userName}');
 
-    // Add data to Firestore
     try {
-       claimDataCollection.doc().set({
-         'name': name,
-         'price':prices,
-         'timestamp': Timestamp.now(),
-         'imageUrl':image,
-         'status':'Pending'
+      // Add data to Firestore and get the document reference
+      DocumentReference docRef = await claimDataCollection.add({
+        'name': name,
+        'price': prices,
+        'timestamp': Timestamp.now(),
+        'imageUrl': image,
+        'status': 'Pending'
         // Add other fields as needed
       });
-      print('Data submitted to Firestore successfully!');
+
+      print('Data submitted to Firestore successfully with ID: ${docRef.id}');
+
+      // After adding data to Firestore, call addCart function with the document ID
+      await addCart(name, image, prices, userName, docRef.id);
     } catch (e) {
       print('Error submitting data to Firestore: $e');
     }
   }
 
-  addCart(String name, String image, double prices) async {
-    return cart.add({
-      'name': name,
-      'price':prices,
-      'timestamp': Timestamp.now(),
-      'imageUrl':image,
-      'status':'Pending'
-    });
+  addCart(String name, String image, double prices, String userName, String docID) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference cart = firestore.collection('cart');
+
+    try {
+      await cart.add({
+        'email': userName,
+        'docID': docID,
+        'name': name,
+        'price': prices,
+        'timestamp': Timestamp.now(),
+        'imageUrl': image,
+        'status': 'Pending'
+      });
+      print('Data added to cart collection successfully!');
+    } catch (e) {
+      print('Error adding data to cart collection: $e');
+    }
   }
+
   addItem(String note, String subnote, String prices, File? selectedImage, String filetype) async {
 
     final imagePath = 'newest/item${DateTime.now().millisecondsSinceEpoch}';

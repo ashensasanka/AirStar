@@ -24,7 +24,7 @@ class _ApproveCartPageState extends State<ApproveCartPage> {
     _notesStream = fireStoreService.getCartsStream();
   }
 
-  void openNoteBox({String? docID}) {
+  void openNoteBox({String? docID,String? email, String? docIDemail}) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -51,6 +51,11 @@ class _ApproveCartPageState extends State<ApproveCartPage> {
             onPressed: () {
                 fireStoreService.updateStatus(
                   docID!,
+                  selectedStatus,
+                );
+                fireStoreService.updateIStatus(
+                  email!,
+                  docIDemail!,
                   selectedStatus,
                 );
               Navigator.pop(context);
@@ -113,7 +118,9 @@ class _ApproveCartPageState extends State<ApproveCartPage> {
 
                       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
                       String noteText = data['name'];
-                      String subtext = data['status'] ?? ''; // Get subtext or use empty string if not available
+                      String subtext = data['status'] ?? '';
+                      String email = data['email'] ?? '';
+                      String docIDemail = data['docID'] ?? '';
 
                       return ListTile(
                         title: Column(
@@ -140,7 +147,7 @@ class _ApproveCartPageState extends State<ApproveCartPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              onPressed: () => openNoteBox(docID: docID),
+                              onPressed: () => openNoteBox(docID: docID, email:email, docIDemail: docIDemail),
                               icon: Icon(Icons.settings),
                             ),
                             IconButton(

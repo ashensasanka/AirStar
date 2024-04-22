@@ -39,11 +39,12 @@ class ItemBottomNavBar extends StatelessWidget {
         totalAmount,
       userName
     );
-    fireStoreService.addCart(
-        name,
-        image,
-        totalAmount
-    );
+    // fireStoreService.addCart(
+    //     name,
+    //     image,
+    //     totalAmount,
+    //   userName
+    // );
     Fluttertoast.showToast(
       msg: "Note added successfully",
       toastLength: Toast.LENGTH_SHORT,

@@ -56,6 +56,14 @@ class FireStoreService {
     // Delete the document with specified docID from 'notes' collection
     return cart.doc(docID).delete();
   }
+  Future<void> deleteICart(String email, docIDemail) {
+    // Access Firestore instance
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    // Add your Firestore collection name
+    CollectionReference DataCollection = firestore.collection('cart${email}');
+    // Delete the document with specified docID from 'notes' collection
+    return DataCollection.doc(docIDemail).delete();
+  }
   Future<void> deleteNote(String docID) {
     // Delete the document with specified docID from 'notes' collection
     return notes.doc(docID).delete();

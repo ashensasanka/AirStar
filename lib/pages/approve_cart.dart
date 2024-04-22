@@ -152,7 +152,7 @@ class _ApproveCartPageState extends State<ApproveCartPage> {
                             ),
                             IconButton(
                               onPressed: () {
-                                _confirmDelete(context, docID);
+                                _confirmDelete(context, docID, email, docIDemail);
                               },
                               icon: Icon(Icons.delete),
                             ),
@@ -171,7 +171,7 @@ class _ApproveCartPageState extends State<ApproveCartPage> {
       ),
     );
   }
-  Future<void> _confirmDelete(BuildContext context, String docID) async {
+  Future<void> _confirmDelete(BuildContext context, String docID, String email, String docIDemail) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -195,6 +195,7 @@ class _ApproveCartPageState extends State<ApproveCartPage> {
             TextButton(
               onPressed: () {
                 fireStoreService.deleteCart(docID);
+                fireStoreService.deleteICart(email, docIDemail);
                 Navigator.of(context).pop();
               },
               child: Text('Delete'),

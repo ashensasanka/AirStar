@@ -22,11 +22,13 @@ class FireStoreService {
     return notesStream;
   }
 
-  Future<void> updateAdminNote(String docID, String newNote, String newSubtext) {
+  Future<void> updateAdminNote(String docID, String newNote, String newSubtext, String newPrice) {
+    double price = double.parse(newPrice);
     // Update the document with specified docID in 'notes' collection with new note content, subtext, and updated timestamp
     return notes.doc(docID).update({
-      'note': newNote,
-      'subtext': newSubtext, // Update subtext field
+      'name': newNote,
+      'subtitle': newSubtext,
+      'price':price,
       'timestamp': Timestamp.now(),
     });
   }

@@ -42,52 +42,54 @@ class _NewestPageState extends State<NewestPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: textController,
-              decoration: InputDecoration(
-                labelText: 'Item',
-              ),
-            ),
-            TextField(
-              controller: subtextController, // Use subtextController for subtext TextField
-              decoration: InputDecoration(
-                labelText: 'Discription',
-              ),
-            ),
-            TextField(
-              controller: priceTextController, // Use subtextController for subtext TextField
-              decoration: InputDecoration(
-                labelText: 'Price',
-              ),
-            ),
-            SizedBox(height: 10,),
-            GestureDetector(
-              onTap:  _getImageFromGallery,
-              child: Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  color: Colors.white, // Set the background color
-                  borderRadius:
-                  BorderRadius.circular(20), // Round the borders
-                ),
-                child: _image != null
-                    ? Image.file(
-                  _image!,
-                  fit: BoxFit.cover,
-                )
-                    : Icon(
-                  Icons
-                      .add_photo_alternate, // Add an icon for image selection
-                  size: 50,
-                  color: Colors.grey, // Set the icon color
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: textController,
+                decoration: InputDecoration(
+                  labelText: 'Item',
                 ),
               ),
-            ),
-          ],
+              TextField(
+                controller: subtextController, // Use subtextController for subtext TextField
+                decoration: InputDecoration(
+                  labelText: 'Discription',
+                ),
+              ),
+              TextField(
+                controller: priceTextController, // Use subtextController for subtext TextField
+                decoration: InputDecoration(
+                  labelText: 'Price',
+                ),
+              ),
+              SizedBox(height: 10,),
+              GestureDetector(
+                onTap:  _getImageFromGallery,
+                child: Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.white, // Set the background color
+                    borderRadius:
+                    BorderRadius.circular(20), // Round the borders
+                  ),
+                  child: _image != null
+                      ? Image.file(
+                    _image!,
+                    fit: BoxFit.cover,
+                  )
+                      : Icon(
+                    Icons
+                        .add_photo_alternate, // Add an icon for image selection
+                    size: 50,
+                    color: Colors.grey, // Set the icon color
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
         actions: [
           ElevatedButton(
@@ -112,7 +114,7 @@ class _NewestPageState extends State<NewestPage> {
                   docID,
                   textController.text,
                   subtextController.text,
-
+                  priceTextController.text,
                 );
               }
               textController.clear();

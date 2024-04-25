@@ -81,7 +81,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
 
               Navigator.pop(context);
             },
-            child: Text("Add Note"),
+            child: Text("Add Image"),
           ),
         ],
       ),

@@ -116,7 +116,7 @@ class HomePage extends StatelessWidget {
       ),
 
       // ---------------Drawer Widget----------------
-      drawer: DrawerWidget(),
+      drawer: DrawerWidget(userName:userName),
 
       floatingActionButton: Container(
         decoration: BoxDecoration(

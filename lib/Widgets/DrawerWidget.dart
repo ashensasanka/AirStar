@@ -1,7 +1,93 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
-class DrawerWidget extends StatelessWidget {
+import '../services/firestore.dart';
+
+class DrawerWidget extends StatefulWidget {
+  final String? userName;
+
+  DrawerWidget({Key? key, this.userName}) : super(key: key);
+
+  @override
+  State<DrawerWidget> createState() => _DrawerWidgetState();
+}
+
+class _DrawerWidgetState extends State<DrawerWidget> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  File? _image;
+
+  Future<void> _getImageFromGallery() async {
+    final pickedFile =
+    await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+  final FireStoreService fireStoreService = FireStoreService();
+  void openNoteBox() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                onTap:  _getImageFromGallery,
+                child: Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.white, // Set the background color
+                    borderRadius:
+                    BorderRadius.circular(20), // Round the borders
+                  ),
+                  child: _image != null
+                      ? Image.file(
+                    _image!,
+                    fit: BoxFit.cover,
+                  )
+                      : Icon(
+                    Icons
+                        .add_photo_alternate, // Add an icon for image selection
+                    size: 50,
+                    color: Colors.grey, // Set the icon color
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+                fireStoreService.addProPic(
+                    _image,
+                    'image'
+                );
+                Fluttertoast.showToast(
+                  msg: "Note added successfully",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  backgroundColor: Colors.green,
+                  textColor: Colors.white,
+                );
+
+              Navigator.pop(context);
+            },
+            child: Text("Add Note"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -13,21 +99,60 @@ class DrawerWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.red,
               ),
-              accountName: Text(
-                "Subhash",
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
+              accountName: StreamBuilder<DocumentSnapshot>(
+                stream: _firestore.collection('users').doc(widget.userName).snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+                  final DocumentSnapshot document = snapshot.data!;
+                  final Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+                  return Text('${data['username']}',style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),);
+                },
               ),
-              accountEmail: Text(
-                "subhash@gmail.com",
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
+              accountEmail: StreamBuilder<DocumentSnapshot>(
+                stream: _firestore.collection('users').doc(widget.userName).snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+                  final DocumentSnapshot document = snapshot.data!;
+                  final Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+                  return Text('${data['email']}',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),);
+                },
               ),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage("assets/propic.png"),
+              currentAccountPicture: GestureDetector(
+                onTap: openNoteBox,
+                child: StreamBuilder<DocumentSnapshot>(
+                  stream: _firestore.collection('users').doc(widget.userName).snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    }
+                    final DocumentSnapshot document = snapshot.data!;
+                    final Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+                    return data['imageUrl'] == null? CircleAvatar(
+                      backgroundImage: AssetImage("assets/propic.png"),
+                    ):CircleAvatar(
+                      backgroundImage: NetworkImage("${data['imageUrl']}"),
+                    );
+                  },
+                ),
               ),
             ),
           ),

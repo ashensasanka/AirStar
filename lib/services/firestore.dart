@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 class FireStoreService {
   File? selectedImage;
   // Collection reference for 'notes' collection
+  final CollectionReference user = FirebaseFirestore.instance.collection('users');
   final CollectionReference notes = FirebaseFirestore.instance.collection('newest');
   final CollectionReference cart = FirebaseFirestore.instance.collection('cart');
   final FirebaseStorage storage = FirebaseStorage.instance;
@@ -148,6 +149,22 @@ class FireStoreService {
       'price':price,
       'timestamp': Timestamp.now(),
       'subtitle': subnote, // Initialize subtext field with an empty string
+      'imageUrl':imageUrl
+    });
+  }
+  addProPic( File? selectedImage, String filetype) async {
+
+    final imagePath = 'profile/pic${DateTime.now().millisecondsSinceEpoch}';
+    final Reference storageReference = storage.ref().child(imagePath);
+
+    // Specify content type as 'image/jpeg'
+    final metadata = SettableMetadata(contentType: filetype);
+
+    await storageReference.putFile(selectedImage!, metadata);
+    final String imageUrl = await storageReference.getDownloadURL();
+
+    return user.doc('ashen2@gmail.com').update({
+      'timestamp': Timestamp.now(),
       'imageUrl':imageUrl
     });
   }

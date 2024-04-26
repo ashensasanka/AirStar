@@ -152,7 +152,7 @@ class FireStoreService {
       'imageUrl':imageUrl
     });
   }
-  addProPic( File? selectedImage, String filetype) async {
+  addProPic( String? username, File? selectedImage, String filetype) async {
 
     final imagePath = 'profile/pic${DateTime.now().millisecondsSinceEpoch}';
     final Reference storageReference = storage.ref().child(imagePath);
@@ -163,7 +163,7 @@ class FireStoreService {
     await storageReference.putFile(selectedImage!, metadata);
     final String imageUrl = await storageReference.getDownloadURL();
 
-    return user.doc('ashen2@gmail.com').update({
+    return user.doc(username).update({
       'timestamp': Timestamp.now(),
       'imageUrl':imageUrl
     });

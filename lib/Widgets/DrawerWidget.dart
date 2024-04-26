@@ -68,6 +68,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           ElevatedButton(
             onPressed: () {
                 fireStoreService.addProPic(
+                  widget.userName,
                     _image,
                     'image'
                 );

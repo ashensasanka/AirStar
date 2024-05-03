@@ -1,4 +1,5 @@
 import 'package:assignment_app/pages/CartPage.dart';
+import 'package:assignment_app/pages/CheckPage.dart';
 import 'package:assignment_app/pages/HomePage.dart';
 import 'package:assignment_app/pages/ItemPage.dart';
 import 'package:assignment_app/pages/hover_page.dart';
@@ -29,7 +30,9 @@ class MyApp extends StatelessWidget {
         '/signin': (context) => SignInPage(), // Default route to SignInPage
         '/home': (context) => HomePage(), // Route to HomePage
         '/itemPage': (context) => ItemPage(), // Route to ItemPage
-        '/cartPage': (context) => CartPage()
+        '/checkoutPage': (context) => CheckPage(),
+        '/cartPage': (context) => CartPage(),
+
         // Other routes...
       },
       // Other configurations...

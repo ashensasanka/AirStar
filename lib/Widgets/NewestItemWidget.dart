@@ -66,7 +66,7 @@ class NewestItemWidget extends StatelessWidget {
               onTap: () {
                 Navigator.pushNamed(
                   context,
-                  "/itemPage",
+                  "/checkoutPage",
                   arguments: {
                     'image': image,
                     'title': title,
